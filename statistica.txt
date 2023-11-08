@@ -1,0 +1,44 @@
+
+
+nume legatura : file_link
+dimensiune legătura : 589051 
+dimensiune fișier : 589051 
+drepturi de acces user legatura : RW-
+drepturi de acces grup legatura : RW-
+drepturi de acces altii legatura : R--
+
+nume director : A
+identificatorul utilizatorului : 501
+drepturi de acces user : RWX
+drepturi de acces grup : R-X
+drepturi de acces altii : R-X
+nume fisier : ANALIZA_SWOT.txt
+dimensiune : 6503
+identificatorul utilizatorului : 501
+timpul ultimei modificari : 2023-10-27
+contorul de legaturi : 1
+drepturi de acces user : RW-
+drepturi de acces grup : R--
+drepturi de acces altii : R--
+
+
+nume fisier : imagine.bmp
+dimensiune : 7372938
+identificatorul utilizatorului : 501
+timpul ultimei modificari : 2023-11-07
+contorul de legaturi : 1
+drepturi de acces user : RW-
+drepturi de acces grup : R--
+drepturi de acces altii : R--
+inălțime: 1280
+lungime: 1920
+
+nume fisier : TEMA 2 RC .pdf
+dimensiune : 1427112
+identificatorul utilizatorului : 501
+timpul ultimei modificari : 2023-11-07
+contorul de legaturi : 1
+drepturi de acces user : RW-
+drepturi de acces grup : R--
+drepturi de acces altii : R--
+
