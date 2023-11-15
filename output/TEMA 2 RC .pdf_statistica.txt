@@ -1,0 +1,9 @@
+nume fisier : TEMA 2 RC .pdf
+dimensiune : 1427112
+identificatorul utilizatorului : 501
+timpul ultimei modificari : 2023-11-07
+contorul de legaturi : 1
+drepturi de acces user : RW-
+drepturi de acces grup : R--
+drepturi de acces altii : R--
+
