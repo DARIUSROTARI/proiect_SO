@@ -69,7 +69,7 @@ void informatii_fisier(int fd, char *filename, char *filename_statistica,const c
    }
 }
 
-int getHeight(int fd){
+int getHeight(int fd){//functie ce returneaza inaltimea unui fisier cu extensia .bmp
     int height;
      if (lseek(fd, 22, SEEK_SET) < 0){
         perror("Error to move the file cursor\n");
@@ -83,7 +83,7 @@ int getHeight(int fd){
     return height;
 }
 
-int getWidth(int fd){
+int getWidth(int fd){//functie ce returneaza latimea unui fisier cu extensia .bmp
     int width;
      if (lseek(fd, 18, SEEK_SET) < 0){
         perror("Error to move the file cursor\n");
@@ -282,7 +282,7 @@ void parcurge_director(const char *cale_director, const char *director_iesire){
         
             int numar_linii_scrise = 0;
             pid_t pid;
-            pid = fork();
+            pid = fork();//crearea procesului
 
             if(pid == -1){
                 perror("error fork.\n");
@@ -326,8 +326,9 @@ void parcurge_director(const char *cale_director, const char *director_iesire){
 
         if (element->d_type == DT_REG) {//este un fisier regulat
             
+            int numar_linii_scrise = 0;
             pid_t pid;
-            pid = fork();
+            pid = fork();//crearea procesului
 
             if(pid == -1){
                 perror("error fork.\n");
@@ -335,8 +336,8 @@ void parcurge_director(const char *cale_director, const char *director_iesire){
             }
 
             if(pid == 0){//procesul copil
-            int numar_linii_scrise = 0;
-            int fd = open(cale_completa, O_RDONLY | O_RDWR);
+        
+            int fd = open(cale_completa, O_RDONLY | O_RDWR);//deschid fisierul
             if (fd < 0) {
                 perror("Eroare la deschiderea fișierului.\n");
                 exit(-1);
@@ -349,10 +350,11 @@ void parcurge_director(const char *cale_director, const char *director_iesire){
             numar_linii_scrise = numar_linii_scrise + 8;
             
             if (strstr(element->d_name, ".bmp") != NULL) {//daca are extensia .bmp
+
                 height_and_width(fd,buffer_for_name,director_iesire);
                 numar_linii_scrise = numar_linii_scrise + 2;
 
-                pid_t pid_gray = fork();
+                pid_t pid_gray = fork();//crearea procesului pentru fisiere cu extensia .bmp
 
                 if(pid_gray == -1){
                     perror("error fork.\n");
@@ -366,32 +368,29 @@ void parcurge_director(const char *cale_director, const char *director_iesire){
                     height = getHeight(fd);
                     width = getWidth(fd);
                     
-                    if (lseek(fd, 0, SEEK_SET) < 0){
-                        perror("Error to move the file cursor1\n");
-                        exit(-1);
-                    }
-                    if (lseek(fd, 10, SEEK_CUR) < 0){
+                    if (lseek(fd, 0, SEEK_SET) < 0){//mutare la pozitia 0 in structura unui fisier .bmp
                         perror("Error to move the file cursor1\n");
                         exit(-1);
                     }
 
-                    if(read(fd,&dataOffset,4) < 0){
+                    if (lseek(fd, 10, SEEK_CUR) < 0){//mutare dupa 10 octeti
+                        perror("Error to move the file cursor1\n");
+                        exit(-1);
+                    }
+
+                    if(read(fd, &dataOffset, 4) < 0){//prin dataOffset accesez Raster Data
                         perror("Error to read from file!\n");
                         exit(-1);
                     }
 
-                    if(lseek(fd,4,SEEK_SET) < 0){
-                        perror("Error to move the file cursor2.\n");
-                        exit(-1);
-                    }
-                
-                    if(lseek(fd,dataOffset,SEEK_SET) < 0){
+                    if(lseek(fd,dataOffset,SEEK_SET) < 0){//muta cursorul in locul unde trebuie modificati pixelii
                         perror("Error to move the file cursor3.\n");
                         exit(-1);
                     }
 
                     int red,green,blue;
                     long long i;
+
                     for (i = 0; i < width * height; i++) {
 
                         if (read(fd, &red, 1) < 0){
@@ -416,12 +415,13 @@ void parcurge_director(const char *cale_director, const char *director_iesire){
                         green = gray_value;
                         blue = gray_value;
 
-                        // Muta cursorul înapoi la poziția inițială și scrie noile valori
+                        // Muta cursorul înapoi la poziția inițială
                         if (lseek(fd, -3, SEEK_CUR) < 0) {
                             perror("Error to move the file cursor4.\n");
                             exit(-1);
                         }
 
+                        //Scrie noile valori
                         if (write(fd, &red, 1) < 0) {
                             perror("Error to write red value.\n");
                             exit(-1);
@@ -438,9 +438,11 @@ void parcurge_director(const char *cale_director, const char *director_iesire){
                         }
                     
                     }
-                    // Iesire din procesul copil pentru conversie la tonuri de gri
-                    exit(0);
+                   
+                    exit(0); // Iesire din procesul copil pentru conversie la tonuri de gri
+
                 }else{//proces parinte
+
                     int status_gray;
                     pid_t terminated_pid_gray = waitpid(pid_gray, &status_gray, 0); // Asteapta terminarea procesului copil pentru conversie
 
@@ -458,17 +460,19 @@ void parcurge_director(const char *cale_director, const char *director_iesire){
                 }
         
             }
+
             close(fd);
             exit(numar_linii_scrise);
-            }else { // proces părinte
-            int status;
-            waitpid(pid, &status, 0); // Așteaptă terminarea procesului copil și obține statusul acestuia
 
-            if (!WIFEXITED(status)) {
-                perror("procesul copil s-a terminat cu eroare.\n");
-                exit(-1);
+            }else { // proces părinte
+                int status;
+                waitpid(pid, &status, 0); // Așteaptă terminarea procesului copil și obține statusul acestuia
+
+                if (!WIFEXITED(status)) {
+                    perror("procesul copil s-a terminat cu eroare.\n");
+                    exit(-1);
+                }
             }
-        }
         }
 
         if (element->d_type == DT_LNK) {//daca este o legatura simbolica
@@ -482,12 +486,14 @@ void parcurge_director(const char *cale_director, const char *director_iesire){
             }
 
             if(pid == 0){//proces copil
+
             int numar_linii_scrise = 0;
             int fd_link = open(cale_completa, O_RDONLY);
             if (fd_link < 0) {
                 perror("Eroare la deschiderea legaturii simbolice.\n");
                 exit(-1);
             }
+
             char buffer_for_name[100];
             sprintf(buffer_for_name,"%s_statistica.txt",element->d_name);
 
@@ -497,14 +503,15 @@ void parcurge_director(const char *cale_director, const char *director_iesire){
             close(fd_link);
 
             exit(numar_linii_scrise);
-            }else { // proces părinte
-            int status;
-            waitpid(pid, &status, 0); // Așteaptă terminarea procesului copil și obține statusul acestuia
 
-            if (!WIFEXITED(status)) {
-                perror("procesul copil s-a terminat cu eroare.\n");
-                exit(-1);
-            }
+            }else { // proces părinte
+                int status;
+                waitpid(pid, &status, 0); // Așteaptă terminarea procesului copil și obține statusul acestuia
+
+                if (!WIFEXITED(status)) {
+                    perror("procesul copil s-a terminat cu eroare.\n");
+                    exit(-1);
+                }
            }
         }
 
