@@ -256,6 +256,10 @@ void parcurge_director(const char *cale_director, const char *director_iesire){
     struct dirent *element;
     struct stat st;
 
+    // Array pentru a stoca PID-urile copiilor
+    pid_t pid_array[100];
+    int pid_count = 0;
+
     if ((director = opendir(cale_director)) == NULL) {
         perror("Eroare la deschiderea directorului.\n");
         exit(-1);
@@ -314,15 +318,10 @@ void parcurge_director(const char *cale_director, const char *director_iesire){
             }
             exit(numar_linii_scrise);
         }else { // proces părinte
-            int status;
-            waitpid(pid, &status, 0); // Așteaptă terminarea procesului copil și obține statusul acestuia
-
-            if (!WIFEXITED(status)) {
-                perror("procesul copil s-a terminat cu eroare.\n");
-                exit(-1);
-            }
+            pid_array[pid_count++] = pid;    
+          }
         }
-        }
+        
 
         if (element->d_type == DT_REG) {//este un fisier regulat
             
@@ -465,13 +464,7 @@ void parcurge_director(const char *cale_director, const char *director_iesire){
             exit(numar_linii_scrise);
 
             }else { // proces părinte
-                int status;
-                waitpid(pid, &status, 0); // Așteaptă terminarea procesului copil și obține statusul acestuia
-
-                if (!WIFEXITED(status)) {
-                    perror("procesul copil s-a terminat cu eroare.\n");
-                    exit(-1);
-                }
+                pid_array[pid_count++] = pid;
             }
         }
 
@@ -505,23 +498,29 @@ void parcurge_director(const char *cale_director, const char *director_iesire){
             exit(numar_linii_scrise);
 
             }else { // proces părinte
-                int status;
-                waitpid(pid, &status, 0); // Așteaptă terminarea procesului copil și obține statusul acestuia
-
-                if (!WIFEXITED(status)) {
-                    perror("procesul copil s-a terminat cu eroare.\n");
-                    exit(-1);
-                }
+                pid_array[pid_count++] = pid;
            }
         }
 
     }
     
+    // Așteaptă toți copiii
+    for (int i = 0; i < pid_count; ++i) {
+        int status;
+        waitpid(pid_array[i], &status, 0);
+
+        if (!WIFEXITED(status)) {
+            perror("procesul copil s-a terminat cu eroare.\n");
+            exit(-1);
+        }
+    }
+
     if (closedir(director) < 0){//inchiderea directorului
         perror("eroare inchidere director.\n");
         exit(-1);
     }
 }
+
 
 int main(int argc, char *argv[]){
 

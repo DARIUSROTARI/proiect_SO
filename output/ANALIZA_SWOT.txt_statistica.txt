@@ -7,3 +7,21 @@ drepturi de acces user : RW-
 drepturi de acces grup : R--
 drepturi de acces altii : R--
 
+nume fisier : ANALIZA_SWOT.txt
+dimensiune : 6503
+identificatorul utilizatorului : 501
+timpul ultimei modificari : 2023-10-27
+contorul de legaturi : 1
+drepturi de acces user : RW-
+drepturi de acces grup : R--
+drepturi de acces altii : R--
+
+nume fisier : ANALIZA_SWOT.txt
+dimensiune : 6503
+identificatorul utilizatorului : 501
+timpul ultimei modificari : 2023-10-27
+contorul de legaturi : 1
+drepturi de acces user : RW-
+drepturi de acces grup : R--
+drepturi de acces altii : R--
+
