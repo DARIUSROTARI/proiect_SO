@@ -5,17 +5,3 @@ drepturi de acces user legatura : RW-
 drepturi de acces grup legatura : RW-
 drepturi de acces altii legatura : R--
 
-nume legatura : file_link
-dimensiune legatura : 589051
-dimensiune fisier : 589051
-drepturi de acces user legatura : RW-
-drepturi de acces grup legatura : RW-
-drepturi de acces altii legatura : R--
-
-nume legatura : file_link
-dimensiune legatura : 589051
-dimensiune fisier : 589051
-drepturi de acces user legatura : RW-
-drepturi de acces grup legatura : RW-
-drepturi de acces altii legatura : R--
-

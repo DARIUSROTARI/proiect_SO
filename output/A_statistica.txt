@@ -4,15 +4,3 @@ drepturi de acces user : RWX
 drepturi de acces grup : R-X
 drepturi de acces altii : R-X
 
-nume director : A
-identificatorul utilizatorului : 501
-drepturi de acces user : RWX
-drepturi de acces grup : R-X
-drepturi de acces altii : R-X
-
-nume director : A
-identificatorul utilizatorului : 501
-drepturi de acces user : RWX
-drepturi de acces grup : R-X
-drepturi de acces altii : R-X
-

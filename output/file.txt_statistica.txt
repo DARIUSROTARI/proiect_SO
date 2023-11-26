@@ -1,7 +1,7 @@
-nume fisier : ANALIZA_SWOT.txt
-dimensiune : 6503
+nume fisier : file.txt
+dimensiune : 143
 identificatorul utilizatorului : 501
-timpul ultimei modificari : 2023-10-27
+timpul ultimei modificari : 2023-11-26
 contorul de legaturi : 1
 drepturi de acces user : RW-
 drepturi de acces grup : R--
