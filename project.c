@@ -26,31 +26,31 @@ void informatii_fisier(int fd, char *filename, char *filename_statistica,const c
       exit(1);
    }
 
-  struct stat st;
+    struct stat st;
 
-  char buffer[1024];//alocarea unui buffer suficient de mare
+    char buffer[1024];//alocarea unui buffer suficient de mare
   
-  fstat(fd, &st);
+    fstat(fd, &st);
 
-  char data_modificarii[11];  
-  strftime(data_modificarii, sizeof(data_modificarii), "%Y-%m-%d", localtime(&st.st_mtime));
+    char data_modificarii[11];  
+    strftime(data_modificarii, sizeof(data_modificarii), "%Y-%m-%d", localtime(&st.st_mtime));
 
-  char user_permissions[4],group_permissions[4],others_permissions[4];
+    char user_permissions[4],group_permissions[4],others_permissions[4];
 
-  user_permissions[0] = (st.st_mode & S_IRUSR) ? 'R' : '-';
-  user_permissions[1] = (st.st_mode & S_IWUSR) ? 'W' : '-';
-  user_permissions[2] = (st.st_mode & S_IXUSR) ? 'X' : '-';
-  user_permissions[3] = '\0';
- 
-  group_permissions[0] = (st.st_mode & S_IRGRP) ? 'R' : '-';
-  group_permissions[1] = (st.st_mode & S_IWGRP) ? 'W' : '-';
-  group_permissions[2] = (st.st_mode & S_IXGRP) ? 'X' : '-';
-  group_permissions[3] = '\0';
-  
-  others_permissions[0] = (st.st_mode & S_IROTH) ? 'R' : '-';
-  others_permissions[1] = (st.st_mode & S_IWOTH) ? 'W' : '-';
-  others_permissions[2] = (st.st_mode & S_IXOTH) ? 'X' : '-';
-  others_permissions[3] = '\0';
+    user_permissions[0] = (st.st_mode & S_IRUSR) ? 'R' : '-';
+    user_permissions[1] = (st.st_mode & S_IWUSR) ? 'W' : '-';
+    user_permissions[2] = (st.st_mode & S_IXUSR) ? 'X' : '-';
+    user_permissions[3] = '\0';
+    
+    group_permissions[0] = (st.st_mode & S_IRGRP) ? 'R' : '-';
+    group_permissions[1] = (st.st_mode & S_IWGRP) ? 'W' : '-';
+    group_permissions[2] = (st.st_mode & S_IXGRP) ? 'X' : '-';
+    group_permissions[3] = '\0';
+    
+    others_permissions[0] = (st.st_mode & S_IROTH) ? 'R' : '-';
+    others_permissions[1] = (st.st_mode & S_IWOTH) ? 'W' : '-';
+    others_permissions[2] = (st.st_mode & S_IXOTH) ? 'X' : '-';
+    others_permissions[3] = '\0';
 
     int bytes_written = snprintf(buffer, sizeof(buffer),"nume fisier : %s\ndimensiune : %lld\nidentificatorul utilizatorului : %d\ntimpul ultimei modificari : %s\ncontorul de legaturi : %ld\ndrepturi de acces user : %s\ndrepturi de acces grup : %s\ndrepturi de acces altii : %s\n\n",filename, (long long)st.st_size, st.st_uid, data_modificarii, (long)st.st_nlink, user_permissions, group_permissions, others_permissions);
 
@@ -72,7 +72,9 @@ void informatii_fisier(int fd, char *filename, char *filename_statistica,const c
 }
 
 int getHeight(int fd){//functie ce returneaza inaltimea unui fisier cu extensia .bmp
+
     int height;
+
      if (lseek(fd, 22, SEEK_SET) < 0){
         perror("Error to move the file cursor\n");
         exit(1);
@@ -82,12 +84,15 @@ int getHeight(int fd){//functie ce returneaza inaltimea unui fisier cu extensia 
         perror("Error to read from file!\n");
         exit(1);
     }
+
     return height;
 }
 
 int getWidth(int fd){//functie ce returneaza latimea unui fisier cu extensia .bmp
+
     int width;
-     if (lseek(fd, 18, SEEK_SET) < 0){
+
+    if (lseek(fd, 18, SEEK_SET) < 0){
         perror("Error to move the file cursor\n");
         exit(1);
     }
@@ -96,6 +101,7 @@ int getWidth(int fd){//functie ce returneaza latimea unui fisier cu extensia .bm
         perror("Error to read from file!\n");
         exit(1);
     }
+
     return width;
 }
 
@@ -106,7 +112,7 @@ void height_and_width(int fd, char *filename_statistica,const char *nume_directo
   sprintf(cale_completa,"%s/%s",nume_director_output,filename_statistica);
 
   int stat_fd = open(cale_completa,O_WRONLY | O_CREAT | O_APPEND, 0666);
-   if(stat_fd < 0){
+  if(stat_fd < 0){
       perror("eroare la crearea fisierului de statistica.\n");
       exit(1);
    }
@@ -258,9 +264,7 @@ void informatii_legatura_simbolica(int fd_link, char *filename_statistica, char 
 
 //functie ce converteste un fisier cu extensia .bmp la tonuri de gri 
 void conversie_tonuri_de_gri(int fd, char *buffer_for_name, const char *director_iesire){
-
-    height_and_width(fd,buffer_for_name,director_iesire);//scrie in fisierul de statsitica inaltimea si latimea fisierului .bmp
-
+    
     pid_t pid_gray;
 
     pid_gray = fork();//crearea procesului pentru conversie la tonuri de gri
@@ -302,53 +306,53 @@ void conversie_tonuri_de_gri(int fd, char *buffer_for_name, const char *director
 
         for (i = 0; i < width * height; i++) {
 
-        if (read(fd, &red, 1) < 0){
-            perror("error red.\n");
-            exit(1);
-        }
+            if (read(fd, &red, 1) < 0){
+                perror("error red.\n");
+                exit(1);
+            }
 
-        if (read(fd, &green, 1) < 0){
-            perror("error green.\n");
-            exit(1);
-        }
+            if (read(fd, &green, 1) < 0){
+                perror("error green.\n");
+                exit(1);
+            }
 
-        if (read(fd, &blue, 1) < 0){
-            perror("error blue.\n");
-            exit(1);
-        }
+            if (read(fd, &blue, 1) < 0){
+                perror("error blue.\n");
+                exit(1);
+            }
 
-        int gray_value = (int)(0.299 * red + 0.587 * green + 0.114 * blue);
+            int gray_value = (int)(0.299 * red + 0.587 * green + 0.114 * blue);
 
-        // Seteaza aceeasi valoare de gri pentru toate cele trei culori
-        red = gray_value;
-        green = gray_value;
-        blue = gray_value;
+            // Seteaza aceeasi valoare de gri pentru toate cele trei culori
+            red = gray_value;
+            green = gray_value;
+            blue = gray_value;
 
-        // Muta cursorul înapoi la poziția inițială
-        if (lseek(fd, -3, SEEK_CUR) < 0) {
-            perror("Error to move the file cursor4.\n");
-            exit(1);
-        }
+            // Muta cursorul înapoi la poziția inițială
+            if (lseek(fd, -3, SEEK_CUR) < 0) {
+                perror("Error to move the file cursor4.\n");
+                exit(1);
+            }
 
-        //Scrie noile valori
-        if (write(fd, &red, 1) < 0) {
-            perror("Error to write red value.\n");
-            exit(1);
-        }
+            //Scrie noile valori
+            if (write(fd, &red, 1) < 0) {
+                perror("Error to write red value.\n");
+                exit(1);
+            }
 
-        if (write(fd, &green, 1) < 0) {
-            perror("Error to write green value.\n");
-            exit(1);
-        }
+            if (write(fd, &green, 1) < 0) {
+                perror("Error to write green value.\n");
+                exit(1);
+            }
 
-        if (write(fd, &blue, 1) < 0) {
-            perror("Error to write blue value.\n");
-            exit(1);
-        }
+            if (write(fd, &blue, 1) < 0) {
+                perror("Error to write blue value.\n");
+                exit(1);
+            }
                     
         }
                    
-        exit(0); // Iesire din procesul copil pentru conversie la tonuri de gri
+        exit(0); //iesire din procesul copil pentru conversie la tonuri de gri
 
     }else{//proces parinte
 
@@ -390,11 +394,11 @@ void parcurge_director(const char *cale_director, const char *director_iesire, c
     
     while ((element = readdir(director)) != NULL) {//parcurgerea directorului
 
-         if (strcmp(element->d_name, ".DS_Store") == 0) {
+        if (strcmp(element->d_name, ".DS_Store") == 0) {
               //Ignoră fișierul ascuns DS_Store
               //configurare specifica pentru sistemul meu de operare, macOS
                continue;
-        }
+        } 
 
         char cale_completa[PATH_MAX];
         snprintf(cale_completa, sizeof(cale_completa), "%s/%s", cale_director, element->d_name);
@@ -436,7 +440,7 @@ void parcurge_director(const char *cale_director, const char *director_iesire, c
                 informatii_director(elem,buffer_for_name,element->d_name,director_iesire);
                 numar_linii_scrise = numar_linii_scrise + 5;
 
-                parcurge_director(cale_completa,director_iesire,caracter);// Parcurge recursiv subdirectorul.
+                parcurge_director(cale_completa,director_iesire,caracter);//Parcurge recursiv subdirectorul.
                 closedir(dir);
             }
             exit(numar_linii_scrise);
@@ -481,6 +485,7 @@ void parcurge_director(const char *cale_director, const char *director_iesire, c
                     sprintf(buffer_for_name,"%s_statistica.txt",element->d_name);
 
                     informatii_fisier(fd,element->d_name,buffer_for_name,director_iesire);//scrie informatiile in fisier
+
                     numar_linii_scrise = numar_linii_scrise + 8;//astfel, se scriu in fisier 8 linii
 
                     char buffer[BUFFER_SIZE];
@@ -585,6 +590,15 @@ void parcurge_director(const char *cale_director, const char *director_iesire, c
             }
             else{//fisierul are extensia .bmp
 
+                int fd = open(cale_completa, O_RDONLY | O_RDWR);//deschid fisierul
+                if (fd < 0) {
+                    perror("Eroare la deschiderea fișierului.\n");
+                    exit(1);
+                }
+
+                char buffer_for_name[100];
+                sprintf(buffer_for_name,"%s_statistica.txt",element->d_name);
+
                 int numar_linii_scrise = 0;
                 pid_t pid;
 
@@ -597,23 +611,14 @@ void parcurge_director(const char *cale_director, const char *director_iesire, c
 
                 if(pid == 0){//procesul copil
 
-                    int fd = open(cale_completa, O_RDONLY | O_RDWR);//deschid fisierul
-                    if (fd < 0) {
-                        perror("Eroare la deschiderea fișierului.\n");
-                        exit(1);
-                    }
-
-                    char buffer_for_name[100];
-                    sprintf(buffer_for_name,"%s_statistica.txt",element->d_name);
-
                     informatii_fisier(fd,element->d_name,buffer_for_name,director_iesire);//scrie informatiile in fisier
-                    numar_linii_scrise = numar_linii_scrise + 8;//astfel, se scriu in fisier 8 linii, la fel ca la fisierele care nu au extenia .bmp
+                    height_and_width(fd,buffer_for_name,director_iesire);//scrie in fisierul de statsitica inaltimea si latimea fisierului .bmp
 
-                    conversie_tonuri_de_gri(fd,buffer_for_name,director_iesire);//se apeleaza functia de conversie la tonuri de gri, de unde se si apeleaza functia ce scrie inaltimea si latimea in fisierul de statistica
-                    numar_linii_scrise = numar_linii_scrise + 2;//astfel, se mai scriu inca 2 linii in fisierul de statistica
+                    numar_linii_scrise = numar_linii_scrise + 10;//astfel, se scriu in fisier 10 linii, 8 la fel ca la fisierele care nu au extenia .bmp + inca 2 linii (inaltime + latime)
+
+                    conversie_tonuri_de_gri(fd,buffer_for_name,director_iesire);//se apeleaza functia de conversie la tonuri de gri
 
                     exit(numar_linii_scrise);
-
                 }
                 //proces parinte
                 pid_array[pid_count++] = pid;
@@ -633,22 +638,23 @@ void parcurge_director(const char *cale_director, const char *director_iesire, c
 
             if(pid == 0){//proces copil
 
-            int numar_linii_scrise = 0;
-            int fd_link = open(cale_completa, O_RDONLY);
-            if (fd_link < 0) {
-                perror("Eroare la deschiderea legaturii simbolice.\n");
-                exit(1);
-            }
+                int numar_linii_scrise = 0;
 
-            char buffer_for_name[100];
-            sprintf(buffer_for_name,"%s_statistica.txt",element->d_name);
+                int fd_link = open(cale_completa, O_RDONLY);
+                if (fd_link < 0) {
+                    perror("Eroare la deschiderea legaturii simbolice.\n");
+                    exit(1);
+                }
 
-            informatii_legatura_simbolica(fd_link, buffer_for_name,element->d_name,director_iesire);
-            numar_linii_scrise = numar_linii_scrise + 6;
+                char buffer_for_name[100];
+                sprintf(buffer_for_name,"%s_statistica.txt",element->d_name);
 
-            close(fd_link);
+                informatii_legatura_simbolica(fd_link, buffer_for_name,element->d_name,director_iesire);
+                numar_linii_scrise = numar_linii_scrise + 6;
 
-            exit(numar_linii_scrise);
+                close(fd_link);
+
+                exit(numar_linii_scrise);
 
             }
             else { // proces părinte
